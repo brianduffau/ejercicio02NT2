@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 02 NT2</title>
+
+    <!-- IMPORT VueJS -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+</head>
+<body>
+    
+    <div id="app">
+
+        <div>
+            <h3>Armado de pedidos</h3>
+
+            <p>espacio disponible en el pedido: {{cantidad}}</p>
+
+            <select v-model="selected">
+                <option disabled value="">Seleccionar cantidad</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+            </select><span>Seleccionado: {{ selected }}</span>
+
+            <button @click="agregarCaja();" ref="btnAgregar">agregar caja</button>
+
+            <div ref="contenedorCajas">
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</body>
+</html>
+
+<script>
+let myVue = new Vue({
+    el: "#app",
+    data(){
+        return{
+            selected: "",
+            cantidad: 50,
+            cajas: []
+        }
+    },
+    methods:{
+        agregarCaja(){
+            if(this.selected != ""){
+            let cant = this.selected;
+            let agregador = document.createElement('button');
+            agregador.innerHTML = "agregar productos";
+            this.$refs.contenedorCajas.append(agregador);
+            let caja = {
+                    cantidad: cant,
+                    productos: 0
+                }
+
+            
+
+            } else{
+                this.$refs.btnAgregar.disabled = false;
+            }
+
+            
+        }
+    }
+})
+
+
+
+
+
+
+
+
+</script>
