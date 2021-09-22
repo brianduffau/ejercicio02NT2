@@ -24,12 +24,17 @@
                 <option value="2">2</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
-            </select><span>Seleccionado: {{ selected }}</span>
+            </select>
+            <p>Seleccionado: {{ selected }}</p>
+            <button @click="agregarCaja();" ref="addCajas">agregar caja</button>
+            <button @click="agregarProductos();" ref="addProds" style="visibility: hidden;">agregar productos</button>
 
-            <button @click="agregarCaja();" ref="btnAgregar">agregar caja</button>
+            <div ref="errores"></div>
 
             <div ref="contenedorCajas">
-
+                <div v-for="caja in cajas" :key="caja.cantidad">
+                    <p>ID: {{caja.id}} - espacio disponible: {{caja.cantidad}}</p>
+                </div>
             </div>
 
         </div>
@@ -46,30 +51,61 @@ let myVue = new Vue({
     data(){
         return{
             selected: "",
-            cantidad: 50,
-            cajas: []
+            cantidad: 20,
+            acumuladorPorCajas: 0,
+            cajas: [],
+            idCount: 0
         }
     },
     methods:{
         agregarCaja(){
             if(this.selected != ""){
-            let cant = this.selected;
-            let agregador = document.createElement('button');
-            agregador.innerHTML = "agregar productos";
-            this.$refs.contenedorCajas.append(agregador);
-            let caja = {
+                let cant = this.selected;
+                this.$refs.errores.innerHTML = "";
+                this.$refs.addProds.style.visibility = "visible";
+                let caja = {
+                    id: this.idCount++,
                     cantidad: cant,
                     productos: 0
                 }
 
-            
+                this.cajas.push(caja);
+                this.acumuladorPorCajas += parseFloat(caja.cantidad);
 
+                 if(this.acumuladorPorCajas>=this.cantidad){
+                    this.$refs.addCajas.disabled = true;
+                    this.$refs.errores.innerHTML = "";
+                    let p = document.createElement("p");
+                    p.style.color = 'red';
+                    p.innerHTML = "alcanzó maximo de espacio disponible";
+                    this.$refs.errores.append(p);
+
+                } /* else{
+                    this.cajas.push(caja);
+                    this.acumuladorPorCajas += parseFloat(caja.cantidad);
+                    console.log(this.acumuladorPorCajas)
+                } */
+
+                for(cajas in this.cajas){
+                    console.log("caja id: " + caja.id + " cantidad: " + caja.cantidad)
+                }
+                              
             } else{
-                this.$refs.btnAgregar.disabled = false;
+                this.$refs.errores.innerHTML = "";
+                let p = document.createElement("p");
+                p.style.color = 'red';
+                p.innerHTML = "debe seleccionar cantidad";
+                this.$refs.errores.append(p);
             }
+        },
 
+        agregarProductos(){
+            let cant = this.selected;
+            console.log('hice click, cantidad: ' + cant)
             
         }
+    },
+    computed:{
     }
 })
 
