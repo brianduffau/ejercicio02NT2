@@ -17,18 +17,18 @@
         <div>
             <h2>Armado de pedidos</h2>
             <h3>Ingrese cantidad de productos:</h3>
-            <input v-model="cantidad" placeholder="cantidad">
+            <input v-model="cantidad" placeholder="0">
             <!--<p>espacio disponible en el pedido: {{cantidad}}</p>-->
 
             <select v-model="selected">
-                <option disabled value="">Seleccionar cantidad</option>
+                <option disabled value="">capacidad caja</option>
                 <option value="2">2</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="25">25</option>
             </select>
             
-            <button @click="agregarCaja();" ref="addCajas">agregar caja</button>
+            <button @click="agregarCaja();" ref="addCajas" :disabled="cantidad==null">agregar caja</button>
             <!--<button @click="agregarProductos();" ref="addProds" style="visibility: hidden;">agregar productos</button>-->
 
             <div ref="errores"></div>
@@ -93,7 +93,7 @@ let myVue = new Vue({
                 this.$refs.errores.innerHTML = "";
                 let p = document.createElement("p");
                 p.style.color = 'red';
-                p.innerHTML = "debe seleccionar cantidad";
+                p.innerHTML = "debe seleccionar tipo de caja";
                 this.$refs.errores.append(p);
             }
         },
