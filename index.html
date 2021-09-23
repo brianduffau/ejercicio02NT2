@@ -15,18 +15,18 @@
     <div id="app">
 
         <div>
-            <h3>Armado de pedidos</h3>
-
-            <p>espacio disponible en el pedido: {{cantidad}}</p>
+            <h2>Armado de pedidos</h2>
+            <h3>Ingrese cantidad de productos:</h3>
+            <input v-model="cantidad" placeholder="cantidad">
+            <!--<p>espacio disponible en el pedido: {{cantidad}}</p>-->
 
             <select v-model="selected">
                 <option disabled value="">Seleccionar cantidad</option>
                 <option value="2">2</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
+                <option value="25">25</option>
             </select>
-
-            <p>Seleccionado: {{ selected }}</p>
             
             <button @click="agregarCaja();" ref="addCajas">agregar caja</button>
             <!--<button @click="agregarProductos();" ref="addProds" style="visibility: hidden;">agregar productos</button>-->
@@ -37,7 +37,13 @@
                 <div v-for="caja in cajas" :key="caja.id" ref="divCaja">
                     <p>ID: {{caja.id}} - espacio disponible: {{caja.espacio}} - productos: {{caja.productos}}</p>
                     <button @click="agregarProductos(caja);" :disabled="caja.espacio==0 || cantidad==0">agregar productos</button>
+                    <span v-if="caja.espacio==0" style="color: green;">Caja Llena!</span>
                 </div>
+
+                <div id="pedidoCompleto">
+                    <h3 v-if="this.cantidad==0" style="color: green;">Pedido Completo!</h3>
+                </div>
+
             </div>
         </div>
 
@@ -52,7 +58,7 @@ let myVue = new Vue({
     data(){
         return{
             selected: "",
-            cantidad: 20,
+            cantidad: null,
             acumuladorPorCajas: 0,
             cajas: [],
             idCount: 0
@@ -97,6 +103,7 @@ let myVue = new Vue({
             this.cantidad--;
         }
     },
+    // PREGUNTAR POR EL USO DE COMPUTED Y DIFERENCIA CON METODOS
     computed:{
     }
 })
