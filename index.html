@@ -25,20 +25,21 @@
                 <option value="5">5</option>
                 <option value="10">10</option>
             </select>
+
             <p>Seleccionado: {{ selected }}</p>
+            
             <button @click="agregarCaja();" ref="addCajas">agregar caja</button>
-            <button @click="agregarProductos();" ref="addProds" style="visibility: hidden;">agregar productos</button>
+            <!--<button @click="agregarProductos();" ref="addProds" style="visibility: hidden;">agregar productos</button>-->
 
             <div ref="errores"></div>
 
             <div ref="contenedorCajas">
-                <div v-for="caja in cajas" :key="caja.cantidad">
-                    <p>ID: {{caja.id}} - espacio disponible: {{caja.cantidad}}</p>
+                <div v-for="caja in cajas" :key="caja.id" ref="divCaja">
+                    <p>ID: {{caja.id}} - espacio disponible: {{caja.espacio}} - productos: {{caja.productos}}</p>
+                    <button @click="agregarProductos(caja);" :disabled="caja.espacio==0 || cantidad==0">agregar productos</button>
                 </div>
             </div>
-
         </div>
-
 
     </div>
 
@@ -62,32 +63,24 @@ let myVue = new Vue({
             if(this.selected != ""){
                 let cant = this.selected;
                 this.$refs.errores.innerHTML = "";
-                this.$refs.addProds.style.visibility = "visible";
+                //this.$refs.addProds.style.visibility = "visible";
                 let caja = {
                     id: this.idCount++,
-                    cantidad: cant,
+                    espacio: cant,
                     productos: 0
                 }
-
+                
                 this.cajas.push(caja);
-                this.acumuladorPorCajas += parseFloat(caja.cantidad);
+                this.acumuladorPorCajas += parseFloat(caja.espacio);
 
                  if(this.acumuladorPorCajas>=this.cantidad){
                     this.$refs.addCajas.disabled = true;
                     this.$refs.errores.innerHTML = "";
                     let p = document.createElement("p");
-                    p.style.color = 'red';
+                    p.style.color = 'orange';
                     p.innerHTML = "alcanzó maximo de espacio disponible";
                     this.$refs.errores.append(p);
 
-                } /* else{
-                    this.cajas.push(caja);
-                    this.acumuladorPorCajas += parseFloat(caja.cantidad);
-                    console.log(this.acumuladorPorCajas)
-                } */
-
-                for(cajas in this.cajas){
-                    console.log("caja id: " + caja.id + " cantidad: " + caja.cantidad)
                 }
                               
             } else{
@@ -98,22 +91,14 @@ let myVue = new Vue({
                 this.$refs.errores.append(p);
             }
         },
-
-        agregarProductos(){
-            let cant = this.selected;
-            console.log('hice click, cantidad: ' + cant)
-            
+        agregarProductos(caja){                 
+            caja.productos++;
+            caja.espacio--;
+            this.cantidad--;
         }
     },
     computed:{
     }
 })
-
-
-
-
-
-
-
 
 </script>
