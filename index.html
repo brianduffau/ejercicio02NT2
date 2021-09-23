@@ -9,41 +9,73 @@
     <!-- IMPORT VueJS -->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+    <style>
+        .content{
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .alert{
+      
+            margin-top: 10px;
+        }
+
+        .row{
+            margin-top: 10px;
+        }
+
+        .alert-info{
+            display: inline;
+        }
+    </style>
+
 </head>
 <body>
     
     <div id="app">
 
-        <div>
-            <h2>Armado de pedidos</h2>
-            <h3>Ingrese cantidad de productos:</h3>
-            <input v-model="cantidad" placeholder="0">
-            <!--<p>espacio disponible en el pedido: {{cantidad}}</p>-->
-
-            <select v-model="selected">
-                <option disabled value="">capacidad caja</option>
-                <option value="2">2</option>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-            </select>
-            
-            <button @click="agregarCaja();" ref="addCajas" :disabled="cantidad==null">agregar caja</button>
-            <!--<button @click="agregarProductos();" ref="addProds" style="visibility: hidden;">agregar productos</button>-->
+        <div class="content">
+            <h3>Armado de pedidos</h3>
+            <h5>Ingrese cantidad de productos:</h5>
+ 
+            <div class="input-group">
+                <input v-model="cantidad" placeholder="0" class="form-control">
+                <select v-model="selected" class="form-select" id="inputGroupSelect04" aria-label="Example select with button addon">
+                    <option disabled value="">capacidad caja</option>
+                    <option value="2">2</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                </select>
+                <button @click="agregarCaja();" ref="addCajas" :disabled="cantidad==null" class="btn btn-secondary btn-sm" class="btn btn-outline-secondary">agregar caja</button>
+              </div>
 
             <div ref="errores"></div>
 
-            <div ref="contenedorCajas">
+            <div ref="contenedorCajas" class="container">
                 <div v-for="caja in cajas" :key="caja.id" ref="divCaja">
-                    <p>ID: {{caja.id}} - espacio disponible: {{caja.espacio}} - productos: {{caja.productos}}</p>
-                    <button @click="agregarProductos(caja);" :disabled="caja.espacio==0 || cantidad==0">agregar productos</button>
-                    <span v-if="caja.espacio==0" style="color: green;">Caja Llena!</span>
+                    
+                    <div class="row">
+                        <div class="col-sm">
+                          <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">ID Caja {{caja.id}}</h5>
+                                <p class="card-text">espacio disponible: {{caja.espacio}}</p>
+                                <p class="card-text">productos: {{caja.productos}}</p>
+                                <button @click="agregarProductos(caja);" :disabled="caja.espacio==0 || cantidad==0" class="btn btn-primary">agregar productos</button>
+                                <p v-if="caja.espacio==0" class="alert alert-info" role="alert">Caja Llena!</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>         
                 </div>
 
                 <div id="pedidoCompleto">
-                    <h3 v-if="this.cantidad==0" style="color: green;">Pedido Completo!</h3>
+                    <h3 v-if="this.cantidad==0" class="alert alert-success" role="alert">Pedido Completo!</h3>
                 </div>
-
             </div>
         </div>
 
@@ -79,11 +111,13 @@ let myVue = new Vue({
                 this.cajas.push(caja);
                 this.acumuladorPorCajas += parseFloat(caja.espacio);
 
+                // VER SI SE PUEDE HACER ESTO CON UN V-IF
                  if(this.acumuladorPorCajas>=this.cantidad){
                     this.$refs.addCajas.disabled = true;
                     this.$refs.errores.innerHTML = "";
                     let p = document.createElement("p");
-                    p.style.color = 'orange';
+                    //p.style.color = 'orange';
+                    p.className = "alert alert-warning";
                     p.innerHTML = "alcanzó maximo de espacio disponible";
                     this.$refs.errores.append(p);
 
@@ -92,7 +126,8 @@ let myVue = new Vue({
             } else{
                 this.$refs.errores.innerHTML = "";
                 let p = document.createElement("p");
-                p.style.color = 'red';
+                //p.style.color = 'red';
+                p.className = "alert alert-danger";
                 p.innerHTML = "debe seleccionar tipo de caja";
                 this.$refs.errores.append(p);
             }
